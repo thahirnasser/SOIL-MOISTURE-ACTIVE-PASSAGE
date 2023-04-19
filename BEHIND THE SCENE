@@ -1,1 +1,31 @@
+var smap=ee.ImageCollection('NASA_USDA/HSL/SMAP10KM_soil_moisture')
+.filterDate('2018-08-01','2018-10-11')
+.select('ssm')
+.filterBounds(geometry);
+print(smap);
+
+Map.addLayer(smap);
+
+
+//display map
+var smap2022=ee.ImageCollection(smap).filterDate('2018-08-01','2018-10-11')
+.select('ssm')
+.median();
+
+var smapvis={
+  min:0.0,
+  max:28.0,
+  palette:['0300ff','418504','efff07','ff0303'],
+};
+
+
+Map.addLayer(smap2022,smapvis,"SMAP2022");
+
+Export.image.toDrive({
+  image: smap2022,
+  description:smap,
+  scale:30,
+  region:geometry
+})
+
 
